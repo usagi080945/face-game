@@ -1,10 +1,682 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>テスト</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>かんたんゲームセンター</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #dff6ff, #ffffff);
+      color: #222;
+    }
+    header {
+      background: #4da6ff;
+      color: white;
+      padding: 16px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .hidden { display: none !important; }
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #4da6ff;
+      color: white;
+    }
+    button:hover { opacity: 0.9; }
+    .secondary { background: #777; }
+    .pink { background: #ff6fb5; }
+    .green { background: #36b37e; }
+    .orange { background: #ff9f43; }
+    .danger { background: #e74c3c; }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    input, select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    .small { font-size: 13px; color: #555; }
+    .title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    #gameArea {
+      position: relative;
+      width: 100%;
+      max-width: 700px;
+      height: 420px;
+      background: #eef7ff;
+      border: 2px solid #4da6ff;
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 12px auto;
+    }
+    #player {
+      position: absolute;
+      bottom: 15px;
+      left: 320px;
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: white;
+      font-weight: bold;
+    }
+    .enemy {
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #ff4d4d;
+      top: -50px;
+    }
+    .scoreBox {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .dressup-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .avatar {
+      width: 180px;
+      height: 300px;
+      background: #ffe9d6;
+      border-radius: 20px;
+      position: relative;
+      border: 3px solid #e4b899;
+    }
+    .hair {
+      position: absolute;
+      top: 15px;
+      left: 30px;
+      width: 120px;
+      height: 60px;
+      border-radius: 50px 50px 30px 30px;
+    }
+    .face {
+      position: absolute;
+      top: 65px;
+      left: 45px;
+      width: 90px;
+      height: 90px;
+      background: #ffd8b5;
+      border-radius: 50%;
+    }
+    .clothes {
+      position: absolute;
+      top: 155px;
+      left: 35px;
+      width: 110px;
+      height: 110px;
+      border-radius: 20px;
+    }
+    .shoes {
+      position: absolute;
+      bottom: 15px;
+      left: 40px;
+      width: 100px;
+      height: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .shoe {
+      width: 42px;
+      height: 20px;
+      border-radius: 10px;
+    }
+    .list {
+      display: grid;
+      gap: 8px;
+    }
+    .itemRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      background: #f7f9fc;
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .mini {
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 8px;
+      padding: 10px;
+      background: #f9fbff;
+      border-radius: 12px;
+      border: 1px solid #d8eaff;
+    }
+    .notice {
+      background: #fff8d9;
+      border-left: 5px solid #ffcc00;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-  <h1>TEST</h1>
+  <header>かんたんゲームセンター</header>
+
+  <div class="container">
+
+    <div id="homeScreen" class="card">
+      <div class="title">ゲームをえらんでね！</div>
+      <p>軽いブラウザゲーム集です。メニューから好きなゲームを選べます。</p>
+
+      <div class="checkbox-row">
+        <input type="checkbox" id="termsCheck" />
+        <label for="termsCheck">利用規約を読み、内容に同意したうえでチェックしてください。</label>
+      </div>
+
+      <div class="notice">
+        この超シンプル版では、チェックしてもしなくても遊べます。<br>
+        まずは軽く動くことを優先しています。
+      </div>
+
+      <div class="menu-grid" id="menuButtons">
+        <button onclick="showScreen('actionScreen')">アクションゲーム</button>
+        <button class="pink" onclick="showScreen('dressupScreen')">きせかえゲーム</button>
+        <button class="green" onclick="showScreen('adminScreen')">管理者タブ</button>
+      </div>
+
+      <div id="extraGamesArea" class="menu-grid" style="margin-top:12px;"></div>
+    </div>
+
+    <div id="actionScreen" class="card hidden">
+      <div class="title">アクションゲーム</div>
+      <p>左右キーで車両を動かして、落ちてくるボールをよけてね。</p>
+
+      <div class="row">
+        <label>車両をえらぶ:</label>
+        <select id="vehicleSelect"></select>
+        <button class="orange" onclick="startActionGame()">スタート</button>
+        <button class="secondary" onclick="goHome()">もどる</button>
+      </div>
+
+      <div class="scoreBox">スコア: <span id="score">0</span></div>
+
+      <div id="gameArea">
+        <div id="player">車</div>
+      </div>
+
+      <p class="small">パソコンでは左右キー、スマホでは下のボタンで動かせます。</p>
+      <div class="row">
+        <button class="mini secondary" onclick="movePlayer(-30)">← ひだり</button>
+        <button class="mini secondary" onclick="movePlayer(30)">みぎ →</button>
+      </div>
+    </div>
+
+    <div id="dressupScreen" class="card hidden">
+      <div class="title">きせかえゲーム</div>
+      <p>服や髪の色を切り替えて遊べます。</p>
+
+      <div class="dressup-stage">
+        <div class="avatar">
+          <div id="avatarHair" class="hair"></div>
+          <div class="face"></div>
+          <div id="avatarClothes" class="clothes"></div>
+          <div class="shoes">
+            <div id="shoe1" class="shoe"></div>
+            <div id="shoe2" class="shoe"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label>服をえらぶ:</label>
+          <select id="clothesSelect"></select>
+          <button class="pink" onclick="applyClothes()">きせかえる</button>
+          <button class="secondary" onclick="goHome()">もどる</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="adminScreen" class="card hidden">
+      <div class="title">管理者タブ</div>
+      <p>ゲーム追加、服追加、車両追加・編集ができます。保存はこのブラウザだけに残ります。</p>
+
+      <div class="card">
+        <div class="title" style="font-size:18px;">ゲーム追加</div>
+        <div class="row">
+          <input id="newGameName" placeholder="新しいゲーム名" />
+          <button class="green" onclick="addExtraGame()">追加</button>
+        </div>
+        <div id="extraGameList" class="list"></div>
+      </div>
+
+      <div class="card">
+        <div class="title" style="font-size:18px;">着せ替え服の追加</div>
+        <div class="row">
+          <input id="newClothesName" placeholder="服の名前" />
+          <input id="newClothesColor" type="color" value="#ff6fb5" />
+          <button class="pink" onclick="addClothes()">追加</button>
+        </div>
+        <div id="clothesList" class="list"></div>
+      </div>
+
+      <div class="card">
+        <div class="title" style="font-size:18px;">車両の追加・編集</div>
+        <div class="row">
+          <input id="newVehicleName" placeholder="車両の名前" />
+          <input id="newVehicleColor" type="color" value="#4da6ff" />
+          <input id="newVehicleSpeed" type="number" placeholder="スピード" value="6" min="2" max="20" />
+          <button class="orange" onclick="addVehicle()">追加</button>
+        </div>
+        <div id="vehicleList" class="list"></div>
+      </div>
+
+      <div class="row">
+        <button class="secondary" onclick="resetData()">データを初期化</button>
+        <button class="secondary" onclick="goHome()">もどる</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const defaultData = {
+      extraGames: [
+        { name: "じゃんけんゲーム" },
+        { name: "うらないゲーム" }
+      ],
+      clothes: [
+        { name: "ピンクドレス", color: "#ff6fb5" },
+        { name: "みずいろドレス", color: "#66ccff" },
+        { name: "むらさきコーデ", color: "#b388ff" }
+      ],
+      vehicles: [
+        { name: "あおい車", color: "#4da6ff", speed: 6 },
+        { name: "あかい車", color: "#ff5c5c", speed: 8 },
+        { name: "みどりの車", color: "#36b37e", speed: 5 }
+      ]
+    };
+
+    let appData = loadData();
+    let playerX = 320;
+    let score = 0;
+    let gameRunning = false;
+    let gameLoop = null;
+    let enemyLoop = null;
+    let currentVehicleSpeed = 6;
+
+    function loadData() {
+      const saved = localStorage.getItem("simpleGameCenterData");
+      return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData));
+    }
+
+    function saveData() {
+      localStorage.setItem("simpleGameCenterData", JSON.stringify(appData));
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll('.card').forEach(card => {
+        if (card.id === "homeScreen" || card.id === "actionScreen" || card.id === "dressupScreen" || card.id === "adminScreen") {
+          card.classList.add('hidden');
+        }
+      });
+      document.getElementById(id).classList.remove('hidden');
+      if (id === 'adminScreen') renderAdmin();
+      if (id === 'actionScreen') renderVehicleSelect();
+      if (id === 'dressupScreen') renderClothesSelect();
+    }
+
+    function goHome() {
+      stopGame();
+      showScreen('homeScreen');
+      renderExtraGames();
+    }
+
+    function renderExtraGames() {
+      const area = document.getElementById('extraGamesArea');
+      area.innerHTML = "";
+      appData.extraGames.forEach((game, index) => {
+        const btn = document.createElement('button');
+        btn.className = "green";
+        btn.textContent = game.name;
+        btn.onclick = () => alert(game.name + " は超シンプル版ではメニュー追加まで対応しています。あとで中身を増やせます。");
+        area.appendChild(btn);
+      });
+    }
+
+    function renderVehicleSelect() {
+      const select = document.getElementById('vehicleSelect');
+      select.innerHTML = "";
+      appData.vehicles.forEach((v, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = v.name + " (速さ " + v.speed + ")";
+        select.appendChild(opt);
+      });
+      applyVehicleToPlayer();
+    }
+
+    function applyVehicleToPlayer() {
+      const idx = parseInt(document.getElementById('vehicleSelect').value || 0);
+      const vehicle = appData.vehicles[idx];
+      const player = document.getElementById('player');
+      player.style.background = vehicle.color;
+      player.textContent = vehicle.name.substring(0, 2);
+      currentVehicleSpeed = vehicle.speed;
+    }
+
+    function renderClothesSelect() {
+      const select = document.getElementById('clothesSelect');
+      select.innerHTML = "";
+      appData.clothes.forEach((c, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = c.name;
+        select.appendChild(opt);
+      });
+      applyClothes();
+    }
+
+    function applyClothes() {
+      const idx = parseInt(document.getElementById('clothesSelect').value || 0);
+      const clothes = appData.clothes[idx];
+      document.getElementById('avatarClothes').style.background = clothes.color;
+      document.getElementById('avatarHair').style.background = darkenColor(clothes.color, -40);
+      document.getElementById('shoe1').style.background = darkenColor(clothes.color, -25);
+      document.getElementById('shoe2').style.background = darkenColor(clothes.color, -25);
+    }
+
+    function darkenColor(hex, amount) {
+      let col = hex.replace('#', '');
+      let num = parseInt(col, 16);
+      let r = Math.max(0, Math.min(255, (num >> 16) + amount));
+      let g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + amount));
+      let b = Math.max(0, Math.min(255, (num & 0x0000FF) + amount));
+      return "#" + (g | (b << 8) | (r << 16)).toString(16).padStart(6, '0');
+    }
+
+    function renderAdmin() {
+      renderExtraGameList();
+      renderClothesList();
+      renderVehicleList();
+    }
+
+    function addExtraGame() {
+      const name = document.getElementById('newGameName').value.trim();
+      if (!name) return alert("ゲーム名を入れてね");
+      appData.extraGames.push({ name });
+      saveData();
+      document.getElementById('newGameName').value = "";
+      renderAdmin();
+      renderExtraGames();
+    }
+
+    function renderExtraGameList() {
+      const list = document.getElementById('extraGameList');
+      list.innerHTML = "";
+      appData.extraGames.forEach((game, index) => {
+        const row = document.createElement('div');
+        row.className = "itemRow";
+        row.innerHTML = `
+          <input value="${game.name}" onchange="editExtraGame(${index}, this.value)" />
+          <button class="danger mini" onclick="deleteExtraGame(${index})">削除</button>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function editExtraGame(index, value) {
+      appData.extraGames[index].name = value;
+      saveData();
+      renderExtraGames();
+    }
+
+    function deleteExtraGame(index) {
+      appData.extraGames.splice(index, 1);
+      saveData();
+      renderAdmin();
+      renderExtraGames();
+    }
+
+    function addClothes() {
+      const name = document.getElementById('newClothesName').value.trim();
+      const color = document.getElementById('newClothesColor').value;
+      if (!name) return alert("服の名前を入れてね");
+      appData.clothes.push({ name, color });
+      saveData();
+      document.getElementById('newClothesName').value = "";
+      renderAdmin();
+      renderClothesSelect();
+    }
+
+    function renderClothesList() {
+      const list = document.getElementById('clothesList');
+      list.innerHTML = "";
+      appData.clothes.forEach((item, index) => {
+        const row = document.createElement('div');
+        row.className = "itemRow";
+        row.innerHTML = `
+          <input value="${item.name}" onchange="editClothesName(${index}, this.value)" />
+          <input type="color" value="${item.color}" onchange="editClothesColor(${index}, this.value)" />
+          <button class="danger mini" onclick="deleteClothes(${index})">削除</button>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function editClothesName(index, value) {
+      appData.clothes[index].name = value;
+      saveData();
+      renderClothesSelect();
+    }
+
+    function editClothesColor(index, value) {
+      appData.clothes[index].color = value;
+      saveData();
+      renderClothesSelect();
+    }
+
+    function deleteClothes(index) {
+      appData.clothes.splice(index, 1);
+      saveData();
+      renderAdmin();
+      renderClothesSelect();
+    }
+
+    function addVehicle() {
+      const name = document.getElementById('newVehicleName').value.trim();
+      const color = document.getElementById('newVehicleColor').value;
+      const speed = parseInt(document.getElementById('newVehicleSpeed').value || 6);
+      if (!name) return alert("車両の名前を入れてね");
+      appData.vehicles.push({ name, color, speed });
+      saveData();
+      document.getElementById('newVehicleName').value = "";
+      renderAdmin();
+      renderVehicleSelect();
+    }
+
+    function renderVehicleList() {
+      const list = document.getElementById('vehicleList');
+      list.innerHTML = "";
+      appData.vehicles.forEach((item, index) => {
+        const row = document.createElement('div');
+        row.className = "itemRow";
+        row.innerHTML = `
+          <input value="${item.name}" onchange="editVehicleName(${index}, this.value)" />
+          <input type="color" value="${item.color}" onchange="editVehicleColor(${index}, this.value)" />
+          <input type="number" min="2" max="20" value="${item.speed}" onchange="editVehicleSpeed(${index}, this.value)" />
+          <button class="danger mini" onclick="deleteVehicle(${index})">削除</button>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function editVehicleName(index, value) {
+      appData.vehicles[index].name = value;
+      saveData();
+      renderVehicleSelect();
+    }
+
+    function editVehicleColor(index, value) {
+      appData.vehicles[index].color = value;
+      saveData();
+      renderVehicleSelect();
+    }
+
+    function editVehicleSpeed(index, value) {
+      appData.vehicles[index].speed = parseInt(value || 6);
+      saveData();
+      renderVehicleSelect();
+    }
+
+    function deleteVehicle(index) {
+      appData.vehicles.splice(index, 1);
+      saveData();
+      renderAdmin();
+      renderVehicleSelect();
+    }
+
+    function resetData() {
+      if (!confirm("追加したデータを初期化する？")) return;
+      localStorage.removeItem("simpleGameCenterData");
+      appData = loadData();
+      renderAll();
+      alert("初期化しました");
+    }
+
+    function startActionGame() {
+      stopGame();
+      applyVehicleToPlayer();
+      playerX = 320;
+      score = 0;
+      gameRunning = true;
+      document.getElementById('score').textContent = score;
+      const player = document.getElementById('player');
+      player.style.left = playerX + "px";
+
+      gameLoop = setInterval(() => {
+        score++;
+        document.getElementById('score').textContent = score;
+      }, 500);
+
+      enemyLoop = setInterval(createEnemy, 800);
+    }
+
+    function stopGame() {
+      gameRunning = false;
+      clearInterval(gameLoop);
+      clearInterval(enemyLoop);
+      document.querySelectorAll('.enemy').forEach(e => e.remove());
+    }
+
+    function movePlayer(dx) {
+      if (!document.getElementById('actionScreen').classList.contains('hidden')) {
+        playerX += dx;
+        if (playerX < 0) playerX = 0;
+        if (playerX > 640) playerX = 640;
+        document.getElementById('player').style.left = playerX + "px";
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (!gameRunning) return;
+      if (e.key === 'ArrowLeft') movePlayer(-currentVehicleSpeed * 5);
+      if (e.key === 'ArrowRight') movePlayer(currentVehicleSpeed * 5);
+    });
+
+    document.getElementById('vehicleSelect').addEventListener('change', applyVehicleToPlayer);
+
+    function createEnemy() {
+      if (!gameRunning) return;
+      const area = document.getElementById('gameArea');
+      const enemy = document.createElement('div');
+      enemy.className = 'enemy';
+      let x = Math.random() * 650;
+      let y = -50;
+      enemy.style.left = x + 'px';
+      enemy.style.top = y + 'px';
+      area.appendChild(enemy);
+
+      const fall = setInterval(() => {
+        if (!gameRunning) {
+          clearInterval(fall);
+          enemy.remove();
+          return;
+        }
+        y += 5;
+        enemy.style.top = y + 'px';
+
+        const player = document.getElementById('player');
+        const pRect = player.getBoundingClientRect();
+        const eRect = enemy.getBoundingClientRect();
+
+        if (
+          eRect.left < pRect.right &&
+          eRect.right > pRect.left &&
+          eRect.top < pRect.bottom &&
+          eRect.bottom > pRect.top
+        ) {
+          clearInterval(fall);
+          stopGame();
+          alert("ゲームオーバー！ スコア: " + score);
+        }
+
+        if (y > 430) {
+          clearInterval(fall);
+          enemy.remove();
+        }
+      }, 20);
+    }
+
+    function renderAll() {
+      renderExtraGames();
+      renderVehicleSelect();
+      renderClothesSelect();
+      renderAdmin();
+    }
+
+    renderAll();
+    goHome();
+  </script>
 </body>
 </html>
