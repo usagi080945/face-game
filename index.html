@@ -14,9 +14,9 @@
     }
     header {
       background: #4da6ff;
-      color: white;
-      padding: 16px;
+      color: #fff;
       text-align: center;
+      padding: 16px;
       font-size: 28px;
       font-weight: bold;
     }
@@ -26,49 +26,17 @@
       padding: 16px;
     }
     .card {
-      background: white;
+      background: #fff;
       border-radius: 14px;
       padding: 16px;
       margin-bottom: 16px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
-    .menu-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin-top: 12px;
-    }
-    button {
-      border: none;
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-size: 16px;
-      cursor: pointer;
-      background: #4da6ff;
-      color: white;
-    }
-    button:hover { opacity: 0.9; }
-    .secondary { background: #777; }
-    .pink { background: #ff6fb5; }
-    .orange { background: #ff9f43; }
-    .green { background: #36b37e; }
-    .checkbox-row {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      background: #f7fbff;
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px solid #d7e8ff;
-      margin-bottom: 12px;
-    }
-    .hidden { display: none !important; }
     .title {
       font-size: 22px;
       font-weight: bold;
       margin-bottom: 10px;
     }
-    .small { font-size: 13px; color: #555; }
     .row {
       display: flex;
       flex-wrap: wrap;
@@ -76,12 +44,22 @@
       align-items: center;
       margin-bottom: 10px;
     }
-    select {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-size: 14px;
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      color: #fff;
+      background: #4da6ff;
     }
+    .pink { background: #ff6fb5; }
+    .green { background: #36b37e; }
+    .orange { background: #ff9f43; }
+    .secondary { background: #777; }
+    .danger { background: #e74c3c; }
+    .hidden { display: none !important; }
+
     #gameArea {
       position: relative;
       width: 100%;
@@ -99,12 +77,12 @@
       left: 320px;
       width: 60px;
       height: 60px;
+      background: #4da6ff;
       border-radius: 12px;
+      color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 26px;
-      color: white;
       font-weight: bold;
     }
     .enemy {
@@ -112,65 +90,24 @@
       width: 42px;
       height: 42px;
       border-radius: 50%;
-      background: #ff4d4d;
+      background: red;
       top: -50px;
     }
-    .scoreBox {
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    .dressup-stage {
+    .checkbox-row {
       display: flex;
-      flex-direction: column;
-      align-items: center;
       gap: 10px;
+      align-items: flex-start;
+      background: #f7fbff;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid #d7e8ff;
+      margin-bottom: 12px;
     }
-    .avatar {
-      width: 180px;
-      height: 300px;
-      background: #ffe9d6;
-      border-radius: 20px;
-      position: relative;
-      border: 3px solid #e4b899;
-    }
-    .hair {
-      position: absolute;
-      top: 15px;
-      left: 30px;
-      width: 120px;
-      height: 60px;
-      border-radius: 50px 50px 30px 30px;
-    }
-    .face {
-      position: absolute;
-      top: 65px;
-      left: 45px;
-      width: 90px;
-      height: 90px;
-      background: #ffd8b5;
-      border-radius: 50%;
-    }
-    .clothes {
-      position: absolute;
-      top: 155px;
-      left: 35px;
-      width: 110px;
-      height: 110px;
-      border-radius: 20px;
-    }
-    .shoes {
-      position: absolute;
-      bottom: 15px;
-      left: 40px;
-      width: 100px;
-      display: flex;
-      justify-content: space-between;
-    }
-    .shoe {
-      width: 42px;
-      height: 20px;
-      border-radius: 10px;
+    video {
+      width: 100%;
+      max-width: 420px;
+      border-radius: 12px;
+      background: #000;
     }
     .notice {
       background: #fff8d9;
@@ -179,210 +116,203 @@
       border-radius: 10px;
       margin-top: 10px;
     }
+    .adminBox {
+      border: 2px dashed #ff9f43;
+      padding: 12px;
+      border-radius: 12px;
+      background: #fffaf3;
+      margin-top: 14px;
+    }
+    input[type="password"] {
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+    .status {
+      font-size: 14px;
+      color: #555;
+      margin-top: 8px;
+    }
   </style>
 </head>
 <body>
   <header>かんたんゲームセンター</header>
 
   <div class="container">
-    <div id="homeScreen" class="card">
-      <div class="title">ゲームをえらんでね！</div>
-      <p>遊ぶ人用ページです。管理は別ページで行います。</p>
+    <div class="card">
+      <div class="title">遊ぶページ</div>
+      <p>ゲームを遊びながら、同意がある場合のみ顔の録画を開始できます。</p>
 
       <div class="checkbox-row">
-        <input type="checkbox" id="termsCheck" />
-        <label for="termsCheck">利用規約を読み、内容に同意したうえでチェックしてください。</label>
+        <input type="checkbox" id="consentCheck">
+        <label for="consentCheck">
+          録画する前に、本人から顔の録画について許可をもらっています。
+        </label>
       </div>
+
+      <div class="row">
+        <button onclick="startCamera()">カメラ開始</button>
+        <button class="green" onclick="startRecording()">録画開始</button>
+        <button class="orange" onclick="stopRecording()">録画停止</button>
+        <button class="secondary" onclick="openAdminLogin()">管理者ページ</button>
+      </div>
+
+      <div class="row">
+        <video id="preview" autoplay muted playsinline></video>
+      </div>
+
+      <div class="status" id="recordStatus">録画データはまだありません。</div>
 
       <div class="notice">
-        このページは遊ぶ用です。服や車両を増やすときは <b>admin.html</b> を開いてください。
+        ダウンロードボタンは表示されません。録画データは管理者モードでのみ確認できます。
       </div>
-
-      <div class="menu-grid" id="menuButtons">
-        <button onclick="showScreen('actionScreen')">アクションゲーム</button>
-        <button class="pink" onclick="showScreen('dressupScreen')">きせかえゲーム</button>
-      </div>
-
-      <div id="extraGamesArea" class="menu-grid" style="margin-top:12px;"></div>
     </div>
 
-    <div id="actionScreen" class="card hidden">
+    <div class="card">
       <div class="title">アクションゲーム</div>
       <p>左右に動いてボールをよけてね。</p>
-
       <div class="row">
-        <label>車両をえらぶ:</label>
-        <select id="vehicleSelect"></select>
-        <button class="orange" onclick="startActionGame()">スタート</button>
-        <button class="secondary" onclick="goHome()">もどる</button>
-      </div>
-
-      <div class="scoreBox">スコア: <span id="score">0</span></div>
-
-      <div id="gameArea">
-        <div id="player">車</div>
-      </div>
-
-      <p class="small">パソコンでは左右キー、スマホでは下のボタンで動かせます。</p>
-      <div class="row">
+        <button onclick="startGame()">スタート</button>
         <button class="secondary" onclick="movePlayer(-30)">← ひだり</button>
         <button class="secondary" onclick="movePlayer(30)">みぎ →</button>
       </div>
+      <p>スコア: <span id="score">0</span></p>
+      <div id="gameArea">
+        <div id="player">車</div>
+      </div>
     </div>
 
-    <div id="dressupScreen" class="card hidden">
-      <div class="title">きせかえゲーム</div>
-      <p>服を選んできせかえてね。</p>
+    <div id="loginPanel" class="card hidden">
+      <div class="title">管理者確認</div>
+      <div class="row">
+        <input type="password" id="adminPass" placeholder="パスワード">
+        <button onclick="unlockAdmin()">開く</button>
+      </div>
+      <p>管理モードを開くにはパスワードが必要です。</p>
+    </div>
 
-      <div class="dressup-stage">
-        <div class="avatar">
-          <div id="avatarHair" class="hair"></div>
-          <div class="face"></div>
-          <div id="avatarClothes" class="clothes"></div>
-          <div class="shoes">
-            <div id="shoe1" class="shoe"></div>
-            <div id="shoe2" class="shoe"></div>
-          </div>
-        </div>
-
+    <div id="adminPanel" class="card hidden">
+      <div class="title">管理モード</div>
+      <div class="adminBox">
+        <p>ここでは録画データの有無を確認し、不要なら削除できます。</p>
         <div class="row">
-          <label>服をえらぶ:</label>
-          <select id="clothesSelect"></select>
-          <button class="pink" onclick="applyClothes()">きせかえる</button>
-          <button class="secondary" onclick="goHome()">もどる</button>
+          <button id="deleteBtn" class="danger hidden" onclick="deleteRecording()">録画を削除</button>
         </div>
+        <p id="adminStatus">録画データなし</p>
       </div>
     </div>
   </div>
 
   <script>
-    const defaultData = {
-      extraGames: [
-        { name: "じゃんけんゲーム" },
-        { name: "うらないゲーム" }
-      ],
-      clothes: [
-        { name: "ピンクドレス", color: "#ff6fb5" },
-        { name: "みずいろドレス", color: "#66ccff" },
-        { name: "むらさきコーデ", color: "#b388ff" }
-      ],
-      vehicles: [
-        { name: "あおい車", color: "#4da6ff", speed: 6 },
-        { name: "あかい車", color: "#ff5c5c", speed: 8 },
-        { name: "みどりの車", color: "#36b37e", speed: 5 }
-      ]
-    };
+    let mediaStream = null;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let recordingSaved = false;
 
-    let appData = loadData();
     let playerX = 320;
     let score = 0;
     let gameRunning = false;
-    let gameLoop = null;
     let enemyLoop = null;
-    let currentVehicleSpeed = 6;
+    let scoreLoop = null;
 
-    function loadData() {
-      const saved = localStorage.getItem("simpleGameCenterData");
-      return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData));
+    const ADMIN_PASSWORD = "080945";
+
+    async function startCamera() {
+      try {
+        mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        document.getElementById('preview').srcObject = mediaStream;
+      } catch (e) {
+        alert("カメラまたはマイクが使えません");
+      }
     }
 
-    function showScreen(id) {
-      document.getElementById('homeScreen').classList.add('hidden');
-      document.getElementById('actionScreen').classList.add('hidden');
-      document.getElementById('dressupScreen').classList.add('hidden');
-      document.getElementById(id).classList.remove('hidden');
+    function startRecording() {
+      const consent = document.getElementById('consentCheck').checked;
+      if (!consent) {
+        alert("先に録画の許可チェックを入れてください");
+        return;
+      }
+      if (!mediaStream) {
+        alert("先にカメラを開始してください");
+        return;
+      }
 
-      appData = loadData();
-      if (id === 'actionScreen') renderVehicleSelect();
-      if (id === 'dressupScreen') renderClothesSelect();
+      recordedChunks = [];
+      recordingSaved = false;
+
+      mediaRecorder = new MediaRecorder(mediaStream);
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          recordedChunks.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        if (recordedChunks.length > 0) {
+          recordingSaved = true;
+          document.getElementById('recordStatus').textContent = "録画データがあります。";
+          updateAdminStatus();
+          alert("録画を保存しました。");
+        }
+      };
+
+      mediaRecorder.start();
+      document.getElementById('recordStatus').textContent = "録画中です。";
+      alert("録画を開始しました");
     }
 
-    function goHome() {
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        mediaRecorder.stop();
+      } else {
+        alert("録画中ではありません");
+      }
+    }
+
+    function openAdminLogin() {
+      document.getElementById('loginPanel').classList.remove('hidden');
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function unlockAdmin() {
+      const value = document.getElementById('adminPass').value;
+      if (value === ADMIN_PASSWORD) {
+        document.getElementById('adminPanel').classList.remove('hidden');
+        updateAdminStatus();
+        alert("管理モードを開きました");
+      } else {
+        alert("パスワードが違います");
+      }
+    }
+
+    function updateAdminStatus() {
+      const status = document.getElementById('adminStatus');
+      const deleteBtn = document.getElementById('deleteBtn');
+
+      if (recordingSaved) {
+        status.textContent = "録画データがあります。現在は管理者だけが削除確認できます。";
+        deleteBtn.classList.remove('hidden');
+      } else {
+        status.textContent = "録画データなし";
+        deleteBtn.classList.add('hidden');
+      }
+    }
+
+    function deleteRecording() {
+      recordedChunks = [];
+      recordingSaved = false;
+      document.getElementById('recordStatus').textContent = "録画データはまだありません。";
+      updateAdminStatus();
+      alert("録画データを削除しました");
+    }
+
+    function startGame() {
       stopGame();
-      appData = loadData();
-      renderExtraGames();
-      showOnlyHome();
-    }
-
-    function showOnlyHome() {
-      document.getElementById('homeScreen').classList.remove('hidden');
-      document.getElementById('actionScreen').classList.add('hidden');
-      document.getElementById('dressupScreen').classList.add('hidden');
-    }
-
-    function renderExtraGames() {
-      const area = document.getElementById('extraGamesArea');
-      area.innerHTML = "";
-      appData.extraGames.forEach((game) => {
-        const btn = document.createElement('button');
-        btn.className = "green";
-        btn.textContent = game.name;
-        btn.onclick = () => alert(game.name + " は追加されました。超シンプル版ではメニュー表示まで対応です。");
-        area.appendChild(btn);
-      });
-    }
-
-    function renderVehicleSelect() {
-      const select = document.getElementById('vehicleSelect');
-      select.innerHTML = "";
-      appData.vehicles.forEach((v, i) => {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = v.name + " (速さ " + v.speed + ")";
-        select.appendChild(opt);
-      });
-      applyVehicleToPlayer();
-    }
-
-    function applyVehicleToPlayer() {
-      const idx = parseInt(document.getElementById('vehicleSelect').value || 0);
-      const vehicle = appData.vehicles[idx];
-      const player = document.getElementById('player');
-      player.style.background = vehicle.color;
-      player.textContent = vehicle.name.substring(0, 2);
-      currentVehicleSpeed = vehicle.speed;
-    }
-
-    function renderClothesSelect() {
-      const select = document.getElementById('clothesSelect');
-      select.innerHTML = "";
-      appData.clothes.forEach((c, i) => {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = c.name;
-        select.appendChild(opt);
-      });
-      applyClothes();
-    }
-
-    function applyClothes() {
-      const idx = parseInt(document.getElementById('clothesSelect').value || 0);
-      const clothes = appData.clothes[idx];
-      document.getElementById('avatarClothes').style.background = clothes.color;
-      document.getElementById('avatarHair').style.background = darkenColor(clothes.color, -40);
-      document.getElementById('shoe1').style.background = darkenColor(clothes.color, -25);
-      document.getElementById('shoe2').style.background = darkenColor(clothes.color, -25);
-    }
-
-    function darkenColor(hex, amount) {
-      let col = hex.replace('#', '');
-      let num = parseInt(col, 16);
-      let r = Math.max(0, Math.min(255, (num >> 16) + amount));
-      let g = Math.max(0, Math.min(255, ((num >> 8) & 0x00FF) + amount));
-      let b = Math.max(0, Math.min(255, (num & 0x0000FF) + amount));
-      return "#" + (g | (b << 8) | (r << 16)).toString(16).padStart(6, '0');
-    }
-
-    function startActionGame() {
-      stopGame();
-      appData = loadData();
-      applyVehicleToPlayer();
-      playerX = 320;
       score = 0;
       gameRunning = true;
       document.getElementById('score').textContent = score;
-      document.getElementById('player').style.left = playerX + "px";
-      gameLoop = setInterval(() => {
+      scoreLoop = setInterval(() => {
         score++;
         document.getElementById('score').textContent = score;
       }, 500);
@@ -391,27 +321,23 @@
 
     function stopGame() {
       gameRunning = false;
-      clearInterval(gameLoop);
+      clearInterval(scoreLoop);
       clearInterval(enemyLoop);
       document.querySelectorAll('.enemy').forEach(e => e.remove());
     }
 
     function movePlayer(dx) {
-      if (!document.getElementById('actionScreen').classList.contains('hidden')) {
-        playerX += dx;
-        if (playerX < 0) playerX = 0;
-        if (playerX > 640) playerX = 640;
-        document.getElementById('player').style.left = playerX + "px";
-      }
+      playerX += dx;
+      if (playerX < 0) playerX = 0;
+      if (playerX > 640) playerX = 640;
+      document.getElementById('player').style.left = playerX + 'px';
     }
 
     document.addEventListener('keydown', (e) => {
       if (!gameRunning) return;
-      if (e.key === 'ArrowLeft') movePlayer(-currentVehicleSpeed * 5);
-      if (e.key === 'ArrowRight') movePlayer(currentVehicleSpeed * 5);
+      if (e.key === 'ArrowLeft') movePlayer(-30);
+      if (e.key === 'ArrowRight') movePlayer(30);
     });
-
-    document.getElementById('vehicleSelect').addEventListener('change', applyVehicleToPlayer);
 
     function createEnemy() {
       if (!gameRunning) return;
@@ -430,18 +356,18 @@
           enemy.remove();
           return;
         }
+
         y += 5;
         enemy.style.top = y + 'px';
 
-        const player = document.getElementById('player');
-        const pRect = player.getBoundingClientRect();
+        const p = document.getElementById('player').getBoundingClientRect();
         const eRect = enemy.getBoundingClientRect();
 
         if (
-          eRect.left < pRect.right &&
-          eRect.right > pRect.left &&
-          eRect.top < pRect.bottom &&
-          eRect.bottom > pRect.top
+          eRect.left < p.right &&
+          eRect.right > p.left &&
+          eRect.top < p.bottom &&
+          eRect.bottom > p.top
         ) {
           clearInterval(fall);
           stopGame();
@@ -455,8 +381,7 @@
       }, 20);
     }
 
-    renderExtraGames();
-    showOnlyHome();
+    updateAdminStatus();
   </script>
 </body>
 </html>
