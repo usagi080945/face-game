@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>管理ダッシュボード</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #fff7ef, #ffffff);
+      color: #222;
+    }
+    header {
+      background: #ff9f43;
+      color: white;
+      padding: 16px;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      color: white;
+      background: #4da6ff;
+    }
+    .green { background: #36b37e; }
+    .pink { background: #ff6fb5; }
+    .orange { background: #ff9f43; }
+    .danger { background: #e74c3c; }
+    .secondary { background: #777; }
+    .list {
+      display: grid;
+      gap: 8px;
+    }
+    .itemRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      background: #f7f9fc;
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .mini {
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+    .notice {
+      background: #fff8d9;
+      border-left: 5px solid #ffcc00;
+      padding: 10px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
+    a.buttonlink {
+      display: inline-block;
+      text-decoration: none;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: #777;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header>管理ダッシュボード</header>
+
+  <div class="container">
+    <div class="card">
+      <div class="title">使い方</div>
+      <p>ここで追加した内容は、同じブラウザの <b>index.html</b> に反映されます。</p>
+      <div class="notice">
+        保存先は localStorage です。別の端末には自動で移りません。
+      </div>
+      <p style="margin-top:12px;">
+        <a class="buttonlink" href="./">遊ぶページを開く</a>
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="title">ゲーム追加</div>
+      <div class="row">
+        <input id="newGameName" placeholder="新しいゲーム名" />
+        <button class="green" onclick="addExtraGame()">追加</button>
+      </div>
+      <div id="extraGameList" class="list"></div>
+    </div>
+
+    <div class="card">
+      <div class="title">着せ替え服の追加</div>
+      <div class="row">
+        <input id="newClothesName" placeholder="服の名前" />
+        <input id="newClothesColor" type="color" value="#ff6fb5" />
+        <button class="pink" onclick="addClothes()">追加</button>
+      </div>
+      <div id="clothesList" class="list"></div>
+    </div>
+
+    <div class="card">
+      <div class="title">車両の追加・編集</div>
+      <div class="row">
+        <input id="newVehicleName" placeholder="車両の名前" />
+        <input id="newVehicleColor" type="color" value="#4da6ff" />
+        <input id="newVehicleSpeed" type="number" placeholder="スピード" value="6" min="2" max="20" />
+        <button class="orange" onclick="addVehicle()">追加</button>
+      </div>
+      <div id="vehicleList" class="list"></div>
+    </div>
+
+    <div class="card">
+      <div class="title">データ管理</div>
+      <button class="secondary" onclick="resetData()">データを初期化</button>
+    </div>
+  </div>
+
+  <script>
+    const defaultData = {
+      extraGames: [
+        { name: "じゃんけんゲーム" },
+        { name: "うらないゲーム" }
+      ],
+      clothes: [
+        { name: "ピンクドレス", color: "#ff6fb5" },
+        { name: "みずいろドレス", color: "#66ccff" },
+        { name: "むらさきコーデ", color: "#b388ff" }
+      ],
+      vehicles: [
+        { name: "あおい車", color: "#4da6ff", speed: 6 },
+        { name: "あかい車", color: "#ff5c5c", speed: 8 },
+        { name: "みどりの車", color: "#36b37e", speed: 5 }
+      ]
+    };
+
+    let appData = loadData();
+
+    function loadData() {
+      const saved = localStorage.getItem("simpleGameCenterData");
+      return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(defaultData));
+    }
+
+    function saveData() {
+      localStorage.setItem("simpleGameCenterData", JSON.stringify(appData));
+    }
+
+    function addExtraGame() {
+      const name = document.getElementById('newGameName').value.trim();
+      if (!name) return alert("ゲーム名を入れてね");
+      appData.extraGames.push({ name });
+      saveData();
+      document.getElementById('newGameName').value = "";
+      renderExtraGameList();
+    }
+
+    function renderExtraGameList() {
+      const list = document.getElementById('extraGameList');
+      list.innerHTML = "";
+      appData.extraGames.forEach((game, index) => {
+        const row = document.createElement('div');
+        row.className = "itemRow";
+        row.innerHTML = `
+          <input value="${game.name}" onchange="editExtraGame(${index}, this.value)" />
+          <button class="danger mini" onclick="deleteExtraGame(${index})">削除</button>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function editExtraGame(index, value) {
+      appData.extraGames[index].name = value;
+      saveData();
+    }
+
+    function deleteExtraGame(index) {
+      appData.extraGames.splice(index, 1);
+      saveData();
+      renderExtraGameList();
+    }
+
+    function addClothes() {
+      const name = document.getElementById('newClothesName').value.trim();
+      const color = document.getElementById('newClothesColor').value;
+      if (!name) return alert("服の名前を入れてね");
+      appData.clothes.push({ name, color });
+      saveData();
+      document.getElementById('newClothesName').value = "";
+      renderClothesList();
+    }
+
+    function renderClothesList() {
+      const list = document.getElementById('clothesList');
+      list.innerHTML = "";
+      appData.clothes.forEach((item, index) => {
+        const row = document.createElement('div');
+        row.className = "itemRow";
+        row.innerHTML = `
+          <input value="${item.name}" onchange="editClothesName(${index}, this.value)" />
+          <input type="color" value="${item.color}" onchange="editClothesColor(${index}, this.value)" />
+          <button class="danger mini" onclick="deleteClothes(${index})">削除</button>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function editClothesName(index, value) {
+      appData.clothes[index].name = value;
+      saveData();
+    }
+
+    function editClothesColor(index, value) {
+      appData.clothes[index].color = value;
+      saveData();
+    }
+
+    function deleteClothes(index) {
+      appData.clothes.splice(index, 1);
+      saveData();
+      renderClothesList();
+    }
+
+    function addVehicle() {
+      const name = document.getElementById('newVehicleName').value.trim();
+      const color = document.getElementById('newVehicleColor').value;
+      const speed = parseInt(document.getElementById('newVehicleSpeed').value || 6);
+      if (!name) return alert("車両の名前を入れてね");
+      appData.vehicles.push({ name, color, speed });
+      saveData();
+      document.getElementById('newVehicleName').value = "";
+      renderVehicleList();
+    }
+
+    function renderVehicleList() {
+      const list = document.getElementById('vehicleList');
+      list.innerHTML = "";
+      appData.vehicles.forEach((item, index) => {
+        const row = document.createElement('div');
+        row.className = "itemRow";
+        row.innerHTML = `
+          <input value="${item.name}" onchange="editVehicleName(${index}, this.value)" />
+          <input type="color" value="${item.color}" onchange="editVehicleColor(${index}, this.value)" />
+          <input type="number" min="2" max="20" value="${item.speed}" onchange="editVehicleSpeed(${index}, this.value)" />
+          <button class="danger mini" onclick="deleteVehicle(${index})">削除</button>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function editVehicleName(index, value) {
+      appData.vehicles[index].name = value;
+      saveData();
+    }
+
+    function editVehicleColor(index, value) {
+      appData.vehicles[index].color = value;
+      saveData();
+    }
+
+    function editVehicleSpeed(index, value) {
+      appData.vehicles[index].speed = parseInt(value || 6);
+      saveData();
+    }
+
+    function deleteVehicle(index) {
+      appData.vehicles.splice(index, 1);
+      saveData();
+      renderVehicleList();
+    }
+
+    function resetData() {
+      if (!confirm("追加したデータを初期化する？")) return;
+      localStorage.removeItem("simpleGameCenterData");
+      appData = loadData();
+      renderAll();
+      alert("初期化しました");
+    }
+
+    function renderAll() {
+      renderExtraGameList();
+      renderClothesList();
+      renderVehicleList();
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>
